@@ -14,7 +14,7 @@ module.exports = {
         .setDescription('This code comes from a GitHub project [ZerioDev/Music-bot](https://github.com/ZerioDev/Music-bot).\nThe use of this one is possible while keeping the credits for free.\nIf you want to remove the credits join the Discord support server.')
         .addFields([ { name: `Enabled - ${commands.size}`, value: commands.map(x => `\`${x.name}\``).join(' | ') } ])
         .setTimestamp()
-        .setFooter({ text: 'Music comes first - Made with heart by Zerio ❤️', iconURL: inter.member.avatarURL({ dynamic: true })});
+        .setFooter({ text: 'Music comes first - Made with heart by Zerio ❤️, Edited with heart by PPUKJ ❤️', iconURL: inter.member.avatarURL({ dynamic: true })});
 
         inter.reply({ embeds: [embed] });
     },
