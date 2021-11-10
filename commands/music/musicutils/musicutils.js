@@ -1,6 +1,6 @@
 
 const { QueryType } = require('discord-player');
-const { QueueRepeatMode, Queue } = require('discord-player');
+const { QueueRepeatMode } = require('discord-player');
 
 module.exports.search = async function(message,param){ 
         const res = await player.search(param, {
