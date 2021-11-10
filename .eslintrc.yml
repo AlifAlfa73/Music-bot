@@ -1,0 +1,13 @@
+env:
+  browser: true
+  commonjs: true
+  es2021: true
+globals:
+  client: readonly
+  player: readonly
+  process: readonly
+  __dirname: readonly
+extends: eslint:recommended
+parserOptions:
+  ecmaVersion: 13
+rules: {}
