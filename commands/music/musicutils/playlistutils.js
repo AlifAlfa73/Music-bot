@@ -152,9 +152,8 @@ module.exports.infoPlaylist = function (message, args){
     embed.setColor('RED');
     embed.setAuthor("Playlist " + playlistName);
 
-    var desc = "Playlist author : " + pl.author + "\n";
-    desc += "Number of Tracks : " + pl.tracks.length + "\n";
-    desc += "\n **Track List** \n";
+    var desc = `Playlist author : " ${pl.author} \n Number of Tracks ${pl.tracks.length} \n\n **Track List** \n`;
+
 
     var i = 0, len = pl.tracks.length;
     while (i < len && i < 10) {
