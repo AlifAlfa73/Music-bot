@@ -9,7 +9,7 @@ module.exports = {
 
         if (!queue || !queue.playing) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
 
-        message.channel.send(`**WARNING** Jump is bugged on the player library and fix is not yet deployed for public use. Refer to : <https://github.com/Androz2091/discord-player/pull/872>`);
+        message.channel.send(`**WARNING !!!** \n Jump is bugged on the player library and fix is not yet deployed for public use. Refer to : <https://github.com/Androz2091/discord-player/pull/872>`);
 
         queue.jump(queue.tracks[args[0]-1]);
 
