@@ -7,6 +7,7 @@
   "description": "A complete code to download for a cool Discord music bot.",
   "scripts": {
     "main": "node main.js",
+    "dev": "NODE_ENV=dev node main.js",
     "lint" : "npx eslint . --ext .js,.jsx,.ts,.tsx",
     "start" : "npm run lint && npm run main"
   },
