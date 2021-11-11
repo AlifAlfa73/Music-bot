@@ -25,7 +25,7 @@ module.exports = {
                 success = queue.setRepeatMode(QueueRepeatMode.OFF);
                 return message.channel.send(success ? `Repeat mode disabled` : `Something went wrong ${message.author}... try again ? ❌`);
             default :
-                return message.channel.send(`No such option for this command`);
+                return message.channel.send(`Please use **/loop song** to loop the song that is currently playing, **/loop queue** to loop the entire queue, or **/loop off to stop current loop.`);
         }
     },
 };
