@@ -23,6 +23,21 @@ module.exports.shuffle = async function(queue){
     return queue;
 }
 
+//custom jump since discord-player jump is bugged
+//move a track in queue to the next to play (index 1)
+module.exports.jump = async function(queue, idx){
+    // remove the track if exists
+    const foundTrack = queue.remove(queue.tracks[idx]);
+    if (!foundTrack)
+        return false;
+    // since we removed the existing track from the queue,
+    // we now have to place that to position 1
+    // because we want to jump to that track
+    // this will skip current track and play the next one which will be the foundTrack
+    queue.tracks.splice(0, 0, foundTrack);
+    return true;
+}
+
 module.exports.createQueue = async function(player, message){
     const queue = await player.createQueue(message.guild, {
         ytdlOptions: {
