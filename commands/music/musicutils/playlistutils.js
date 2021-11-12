@@ -65,6 +65,7 @@ module.exports.loadPlaylist = async function (message, args){
     }
     //create queue
     const queue = await musicUtils.createQueue(player,message);
+    await musicUtils.voiceConnect(message,queue);
 
     message.channel.send(`Loading your playlist, this will take very looong time depending on the size of your playlist`);
 
