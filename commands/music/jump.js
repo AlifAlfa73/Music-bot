@@ -1,3 +1,4 @@
+const musicUtils = require('./musicutils/musicutils')
 module.exports = {
     name: 'jump',
     aliases: ['jmp'],
@@ -9,10 +10,11 @@ module.exports = {
 
         if (!queue || !queue.playing) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
 
-        message.channel.send(`**WARNING !!!** \n Jump is bugged on the player library and fix is not yet deployed for public use. Refer to : <https://github.com/Androz2091/discord-player/pull/872>`);
+        var success = await musicUtils.jump(queue, args[0]-1);
+        if(success){
+            success = queue.skip();
+        }
 
-        queue.jump(queue.tracks[args[0]-1]);
-
-        return message.channel.send(`Jumped to track no. ${args[0]-1} : ${queue.tracks[args[0]-1].title} ✅`);
+        return message.channel.send(success ? `Jumped to track no. ${args[0]} : ${queue.tracks[0].title} ✅` : `Something went wrong ${message.author}... try again ? ❌`);
     },
 };
