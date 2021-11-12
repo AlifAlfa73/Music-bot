@@ -1,7 +1,3 @@
-const { QueryType } = require('discord-player');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const constants = require('../../constants/constants')
-const fileIOUtils = require('../../utils/fileIOUtils')
 const playlistUtils = require('./musicutils/playlistutils')
 
 
@@ -38,7 +34,7 @@ module.exports = {
                 playlistUtils.infoPlaylist(message,args.slice(1));
                 break;
             default :
-                message.channel.send(`No such option for this command`);
+                return message.channel.send(`No such option for this command`);
         }
     },
 };
