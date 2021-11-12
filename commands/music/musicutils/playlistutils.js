@@ -154,6 +154,7 @@ module.exports.infoPlaylist = function (message, args){
 
     var desc = `Playlist author : " ${pl.author} \n Number of Tracks ${pl.tracks.length} \n\n **Track List** \n`;
 
+
     var i = 0, len = pl.tracks.length;
     while (i < len && i < 10) {
         desc = `${desc + Number(i+1)}. ${pl.tracks[i].title}\n`;

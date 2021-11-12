@@ -6,7 +6,9 @@ module.exports = {
     showHelp: false,
     utilisation: '{prefix}help',
 
-    execute(client, message) {
+
+    execute(client, message, args) {
+        console.log(args); //TODO: Do something with this shit
         const embed = new MessageEmbed();
 
         embed.setColor('RED');
