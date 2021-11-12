@@ -7,6 +7,9 @@ module.exports = {
 
     execute({ client, inter }) {
         const commands = client.commands.filter(x => x.showHelp !== false);
+        const desc = 'This code comes from a GitHub project [ZerioDev/Music-bot](https://github.com/ZerioDev/Music-bot).\nThe use of this one is possible while keeping the credits for free.\nIf you want to remove the credits join the Discord support server.\n'
+        desc = desc + '**Supports** : Youtube Track, Youtube Playlist, Spotify Track, Spotify Playlist, Soundcloud Track\n';
+        desc = desc + '**Not Supported** : Soundcloud Playlist';
 
         const embed = new EmbedBuilder()
         .setColor('#ff0000')
