@@ -24,8 +24,15 @@ module.exports = {
                 await musicUtils.voiceConnect(message,queue);
                 await queue.play();
             }else{
-                const success = queue.skip();
+                var loopSong = false;
+                if(queue.repeatMode === 1){
+                    loopSong = true;
+                }
 
+                if(loopSong) await musicUtils.setLoop(queue, 'off');
+                var success = await queue.skip();
+
+                if(success & loopSong) await musicUtils.setLoop(queue, 'song'); 
                 return message.channel.send(success ? `Current music ${queue.current.title} skipped ✅` : `Something went wrong ${message.author}... try again ? ❌`);
             }
         }else{
