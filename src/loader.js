@@ -15,7 +15,7 @@ for (const file of events) {
     console.log(`-> [Loaded Event] ${file.split('.')[0]}`);
     client.on(file.split('.')[0], event.bind(null, client));
     delete require.cache[require.resolve(`../events/${file}`)];
-};
+}
 
 console.log(`Loading commands...`);
 

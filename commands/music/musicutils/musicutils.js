@@ -1,6 +1,6 @@
 
 const { QueryType } = require('discord-player');
-const { QueueRepeatMode, Queue } = require('discord-player');
+const { QueueRepeatMode} = require('discord-player');
 
 module.exports.search = async function(message,param){ 
         const res = await player.search(param, {
@@ -99,10 +99,20 @@ module.exports.setLoop = async function(queue, loopType){
         case 'song':
             success = this.setLoopTrack(queue);
             break;
+        case 'track':
+            success = this.setLoopTrack(queue);
+            break;
         case 'off':
             success = queue.setRepeatMode(QueueRepeatMode.OFF);
             break;
     }
+    return success;
+}
+
+module.exports.skipLoopSong = async function (queue){
+    await this.setLoop(queue,'off');
+    var success = queue.skip();
+    
     return success;
 }
 
