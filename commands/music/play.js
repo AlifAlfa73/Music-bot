@@ -11,7 +11,7 @@ module.exports = {
         var searchParam = args.join(' ');
         const res = await musicUtils.search(message,searchParam);
         if(!res){
-            message.channel.send(`No results found ${message.author}... try again ? ❌`);
+            return message.channel.send(`No results found ${message.author}... try again ? ❌`);
         }
         const queue = await musicUtils.createQueue(player,message);
         await musicUtils.voiceConnect(message, queue);
