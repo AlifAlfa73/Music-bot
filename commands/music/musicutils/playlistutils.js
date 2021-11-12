@@ -1,7 +1,9 @@
 const { QueryType } = require('discord-player');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { load } = require('dotenv');
 const constants = require('../../../constants/constants')
 const fileIOUtils = require('../../../utils/fileIOUtils')
+const musicUtils = require('./musicutils')
 
 
 module.exports.savePlaylist = function (message, args, queue){
@@ -46,7 +48,7 @@ module.exports.savePlaylist = function (message, args, queue){
      });
 }
 
-module.exports.loadPlaylist = async function (message, args){
+module.exports.loadPlaylistData = async function (message, args,queue){
     //delete any active queue
     const activeQueue = player.getQueue(message.guild.id);
     if (activeQueue){
@@ -62,23 +64,11 @@ module.exports.loadPlaylist = async function (message, args){
         console.log(err);
         message.send.channel("Failed to read playlist (case insensitive)");
     }
-    //create queue
-    const queue = await player.createQueue(message.guild, {
-        ytdlOptions: {
-            quality: "highest",
-            filter: "audioonly",
-            highWaterMark: 1 << 25,
-            dlChunkSize: 0,
-        },
-        metadata: message.channel
-    });
-    //connect to vc
-    try {
-        if (!queue.connection) await queue.connect(message.member.voice.channel);
-    } catch {
-        await player.deleteQueue(message.guild.id);
-        return message.channel.send(`I can't join the voice channel ${message.author}... try again ? ❌`);
+    //create queue if nil
+    if(!queue){
+        queue = await musicUtils.createQueue(player,message);
     }
+    await musicUtils.voiceConnect(message,queue);
 
     message.channel.send(`Loading your playlist, this will take very looong time depending on the size of your playlist`);
 
@@ -86,20 +76,28 @@ module.exports.loadPlaylist = async function (message, args){
     var i = 0, len = pl.tracks.length;
     while (i < len) {
         // your code
-        const res = await player.search(pl.tracks[i], {
-            requestedBy: message.member,
-            searchEngine: QueryType.AUTO
-        });
+        const res = await musicUtils.search(message,pl.tracks[i].url);
         if(res){
             queue.addTracks(res.tracks);
         }else{
             message.channel.send('Cannot retrieve track ' + pl.tracks[i].title)
         }
         i++;
-    }
+    };
 
-    //start the queue
-    if (!queue.playing) await queue.play();
+    return queue;
+}
+
+module.exports.loadPlaylist = async function(message,args,queue){
+    const loadedQueue = await this.loadPlaylistData(message,args,queue);
+    
+    if (!loadedQueue.playing) await loadedQueue.play();
+}
+
+module.exports.loadShufflePlaylist = async function(message,args,queue){
+    const loadedQueue = await this.loadPlaylistData(message,args,queue);
+    await musicUtils.shuffle(loadedQueue);
+    if(!loadedQueue.playing) await loadedQueue.play();
 }
 
 module.exports.deletePlaylist = function (message,args){

@@ -1,8 +1,8 @@
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
-    name: 'play',
-    aliases: ['p'],
+    name: 'playshuffle',
+    aliases: ['psh'],
     utilisation: '{prefix}play [song name/URL]',
     voiceChannel: true,
 
@@ -20,6 +20,7 @@ module.exports = {
 
         res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]);
 
-        if (!queue.playing) await queue.play();
+        await musicUtils.shuffle(queue);
+        if(!queue.playing) await queue.play();
     },
 };
