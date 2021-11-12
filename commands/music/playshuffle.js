@@ -1,8 +1,8 @@
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
-    name: 'play',
-    aliases: ['p'],
+    name: 'playshuffle',
+    aliases: ['psh'],
     utilisation: '{prefix}play [song name/URL]',
     voiceChannel: true,
 
@@ -11,7 +11,7 @@ module.exports = {
         var searchParam = args.join(' ');
         const res = await musicUtils.search(message,searchParam);
         if(!res){
-            return message.channel.send(`No results found ${message.author}... try again ? ❌`);
+            message.channel.send(`No results found ${message.author}... try again ? ❌`);
         }
         const queue = await musicUtils.createQueue(player,message);
         await musicUtils.voiceConnect(message, queue);
@@ -20,6 +20,7 @@ module.exports = {
 
         res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]);
 
-        if (!queue.playing) await queue.play();
+        await musicUtils.shuffle(queue);
+        if(!queue.playing) await queue.play();
     },
 };

@@ -1,4 +1,4 @@
-const musicUtils = require('./musicutils/musicutils')
+const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'playskip',

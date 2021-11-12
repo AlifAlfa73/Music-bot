@@ -1,5 +1,4 @@
-const { QueryType } = require('discord-player');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const constants = require('../../../constants/constants')
 const fileIOUtils = require('../../../utils/fileIOUtils')
 const musicUtils = require('./musicutils')
@@ -47,7 +46,7 @@ module.exports.savePlaylist = function (message, args, queue){
      });
 }
 
-module.exports.loadPlaylist = async function (message, args){
+module.exports.loadPlaylistData = async function (message, args,queue){
     //delete any active queue
     const activeQueue = player.getQueue(message.guild.id);
     if (activeQueue){
@@ -63,8 +62,11 @@ module.exports.loadPlaylist = async function (message, args){
         console.log(err);
         message.send.channel("Failed to read playlist (case insensitive)");
     }
-    //create queue
-    const queue = await musicUtils.createQueue(player,message);
+    //create queue if nil
+    if(!queue){
+        queue = await musicUtils.createQueue(player,message);
+    }
+    await musicUtils.voiceConnect(message,queue);
 
     message.channel.send(`Loading your playlist, this will take very looong time depending on the size of your playlist`);
 
@@ -81,8 +83,19 @@ module.exports.loadPlaylist = async function (message, args){
         i++;
     }
 
-    //start the queue
-    if (!queue.playing) await queue.play();
+    return queue;
+}
+
+module.exports.loadPlaylist = async function(message,args,queue){
+    const loadedQueue = await this.loadPlaylistData(message,args,queue);
+    
+    if (!loadedQueue.playing) await loadedQueue.play();
+}
+
+module.exports.loadShufflePlaylist = async function(message,args,queue){
+    const loadedQueue = await this.loadPlaylistData(message,args,queue);
+    await musicUtils.shuffle(loadedQueue);
+    if(!loadedQueue.playing) await loadedQueue.play();
 }
 
 module.exports.deletePlaylist = function (message,args){
@@ -139,9 +152,8 @@ module.exports.infoPlaylist = function (message, args){
     embed.setColor('RED');
     embed.setAuthor("Playlist " + playlistName);
 
-    var desc = "Playlist author : " + pl.author + "\n";
-    var desc = desc + "Number of Tracks : " + pl.tracks.length + "\n";
-    var desc = desc + "\n **Track List** \n";
+    var desc = `Playlist author : " ${pl.author} \n Number of Tracks ${pl.tracks.length} \n\n **Track List** \n`;
+
 
     var i = 0, len = pl.tracks.length;
     while (i < len && i < 10) {
