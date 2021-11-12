@@ -1,6 +1,4 @@
-var Promise = require('bluebird');
-const playlistUtils = require('./musicutils/playlistutils')
-const musicUtils = require('./musicutils/musicutils');
+const playlistUtils = require('./musicutils/playlistutils');
 
 module.exports = {
     name: 'playlist',
