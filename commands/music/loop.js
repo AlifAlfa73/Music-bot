@@ -1,4 +1,4 @@
-const { QueueRepeatMode, Queue } = require('discord-player');
+const { QueueRepeatMode } = require('discord-player');
 const musicUtils = require('./musicutils/musicutils')
 
 module.exports = {

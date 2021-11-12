@@ -1,4 +1,4 @@
-const musicUtils = require('./musicutils/musicutils')
+const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'playskip',
@@ -24,7 +24,21 @@ module.exports = {
                 await musicUtils.voiceConnect(message,queue);
                 await queue.play();
             }else{
-                const success = queue.skip();
+                var loopSong = false;
+                if(queue.repeatMode === 1){
+                    loopSong = true;
+                }
+
+                if(loopSong) await musicUtils.setLoop(queue, 'off');
+
+                console.log(queue.repeatMode);
+                console.log(queue.current);
+                var success = await queue.skip();
+                success = await queue.skip();
+                console.log(queue.repeatMode);
+                console.log(queue.current);
+
+                if(success & loopSong) await musicUtils.setLoop(queue, 'song'); 
 
                 return message.channel.send(success ? `Current music ${queue.current.title} skipped ✅` : `Something went wrong ${message.author}... try again ? ❌`);
             }

@@ -1,4 +1,3 @@
-const { QueryType } = require('discord-player');
 const musicUtils = require('./musicutils/musicutils')
 
 module.exports = {

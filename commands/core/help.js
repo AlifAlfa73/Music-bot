@@ -6,7 +6,7 @@ module.exports = {
     showHelp: false,
     utilisation: '{prefix}help',
 
-    execute(client, message, args) {
+    execute(client, message) {
         const embed = new MessageEmbed();
 
         embed.setColor('RED');
@@ -18,7 +18,7 @@ module.exports = {
         desc = desc + '**Not Supported** : Soundcloud Playlist';
 
         embed.setDescription(desc);
-        embed.addField(`Enabled - ${commands.size}`, commands.map(x => `\`${x.name}${x.aliases[0] ? ` (${x.aliases.map(y => y).join(', ')})\`` : '\`'}`).join(' | '));
+        embed.addField(`Enabled - ${commands.size}`, commands.map(x => `\`${x.name}${x.aliases[0] ? ` (${x.aliases.map(y => y).join(', ')})\`` : '`'}`).join(' | '));
 
         embed.setTimestamp();
         embed.setFooter('Music comes first - Made with heart by Zerio ❤️, Edited with heart by PPUKJ ❤️ UwU', message.author.avatarURL({ dynamic: true }));

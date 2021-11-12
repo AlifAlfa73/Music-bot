@@ -1,6 +1,4 @@
-const { QueryType } = require('discord-player');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { load } = require('dotenv');
+const { MessageEmbed } = require('discord.js');
 const constants = require('../../../constants/constants')
 const fileIOUtils = require('../../../utils/fileIOUtils')
 const musicUtils = require('./musicutils')
@@ -83,7 +81,7 @@ module.exports.loadPlaylistData = async function (message, args,queue){
             message.channel.send('Cannot retrieve track ' + pl.tracks[i].title)
         }
         i++;
-    };
+    }
 
     return queue;
 }
@@ -154,9 +152,7 @@ module.exports.infoPlaylist = function (message, args){
     embed.setColor('RED');
     embed.setAuthor("Playlist " + playlistName);
 
-    var desc = "Playlist author : " + pl.author + "\n";
-    var desc = desc + "Number of Tracks : " + pl.tracks.length + "\n";
-    var desc = desc + "\n **Track List** \n";
+    var desc = `Playlist author : " ${pl.author} \n Number of Tracks ${pl.tracks.length} \n\n **Track List** \n`;
 
     var i = 0, len = pl.tracks.length;
     while (i < len && i < 10) {
