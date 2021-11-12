@@ -13,6 +13,19 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup-node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        cache: 'npm'
+    - name: install-dependencies
+      run: npm install
+    - name: Run ESLint
+      run: eslint . --ext .js,.jsx,.ts,.tsx
   deploy:
     runs-on: ubuntu-latest
     steps:
