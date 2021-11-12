@@ -14,6 +14,15 @@ module.exports.search = async function(message,param){
         return res;
 }
 
+//custom shuffle since discord-player shuffle doesn't shuffle current track
+module.exports.shuffle = async function(queue){
+    for (let i = queue.tracks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [queue.tracks[i], queue.tracks[j]] = [queue.tracks[j], queue.tracks[i]];
+    }
+    return queue;
+}
+
 module.exports.createQueue = async function(player, message){
     const queue = await player.createQueue(message.guild, {
         ytdlOptions: {
