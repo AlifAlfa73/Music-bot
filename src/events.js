@@ -6,6 +6,7 @@ player.on('error', (queue, error) => {
     if(queue){
         queue.destroy();
     }
+    queue.metadata.send('Error happened, disconnecting... ❌');
 });
 
 player.on('connectionError', (queue, error) => {
