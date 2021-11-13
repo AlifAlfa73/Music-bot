@@ -1,5 +1,9 @@
 player.on('error', (queue, error) => {
     console.log(`Error emitted from the queue ${error.message}`);
+    console.log(error);
+    if(queue){
+        queue.destroy();
+    }
 });
 
 player.on('connectionError', (queue, error) => {
