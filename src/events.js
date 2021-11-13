@@ -1,13 +1,19 @@
 const log = require('../utils/logUtils');
 
 player.on('error', (queue, error) => {
-    log.info(`Error from [${queue.connection.channel.guild.name}/${queue.connection.channel.name}|${queue.connection.channel.guild.id}]`);
+    log.info(`Error from [${queue.guild.name}/${queue.connection.channel.name}|${queue.guild.id}]`);
     log.error(`Printing Error object`)
     console.log(error);
     if(queue){
         queue.metadata.send(`Error happened when try to play song ${queue.current.title}, skipping... ❌`); 
-        var success = queue.skip();
-        if(!success){
+        if(queue.playing){
+            var success = queue.skip();
+            if(!success){
+                queue.destroy();
+                queue.metadata.send(`Fail to skip song, disconnecting .... ❌`);
+            }
+        }else{
+            queue.destroy();
             queue.metadata.send(`Fail to skip song, disconnecting .... ❌`);
         }
     }
@@ -18,7 +24,7 @@ player.on('connectionError', (queue, error) => {
 });
 
 player.on('trackStart', (queue, track) => {
-    log.info(`Playing song [${track.title}] in [${queue.connection.channel.guild.name}/${queue.connection.channel.name}|${queue.connection.channel.guild.id}] requested by : [${track.requestedBy.username}|${track.requestedBy.id}]`);
+    log.info(`Playing song [${track.title}] in [${queue.guild.name}/${queue.connection.channel.name}|${queue.guild.id}] requested by : [${track.requestedBy.username}|${track.requestedBy.id}]`);
     if (!client.config.opt.loopMessage && queue.repeatMode !== 0) return;
     queue.metadata.send(`Started playing **${track.title}** in **${queue.connection.channel.name}** 🎧`);
 });
