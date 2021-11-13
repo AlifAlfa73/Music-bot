@@ -47,12 +47,6 @@ module.exports.savePlaylist = function (message, args, queue){
 }
 
 module.exports.loadPlaylistData = async function (message, args,queue){
-    //delete any active queue
-    const activeQueue = player.getQueue(message.guild.id);
-    if (activeQueue){
-        activeQueue.destroy();
-    }
-
     const playlistName = args.join(" ");
     console.log("[Load Playlist]" + playlistName)
     //read playlist
