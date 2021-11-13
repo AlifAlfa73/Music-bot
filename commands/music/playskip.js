@@ -27,19 +27,13 @@ module.exports = {
                 var loopSong = false;
                 if(queue.repeatMode === 1){
                     loopSong = true;
+                    player.once('trackStart',(queue) =>{
+                        if(loopSong) musicUtils.setLoop(queue,'song');
+                    })
                 }
-
-                if(loopSong) await musicUtils.setLoop(queue, 'off');
-
-                console.log(queue.repeatMode);
-                console.log(queue.current);
-                var success = await queue.skip();
-                success = await queue.skip();
-                console.log(queue.repeatMode);
-                console.log(queue.current);
-
-                if(success & loopSong) await musicUtils.setLoop(queue, 'song'); 
-
+                if(loopSong) musicUtils.setLoop(queue,'off');
+                const success = queue.skip();
+                
                 return message.channel.send(success ? `Current music ${queue.current.title} skipped ✅` : `Something went wrong ${message.author}... try again ? ❌`);
             }
         }else{
