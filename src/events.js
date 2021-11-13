@@ -1,7 +1,7 @@
 const log = require('../utils/logUtils');
 
 player.on('error', (queue, error) => {
-    log.error(`Error in [${queue.connection.guild.name}/${queue.connection.channel.name}|${queue.connection.guild.id}] : ${error.message}`);
+    log.info(`Error from [${queue.connection.channel.guild.name}/${queue.connection.channel.name}|${queue.connection.channel.guild.id}]`);
     log.error(`Printing Error object`)
     console.log(error);
     log.error(`Printing Current Tag`)
