@@ -1,8 +1,10 @@
-require('dotenv').config()
+
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : `.env`
+require('dotenv').config({ path: envFile} )
 
 module.exports = {
     app: {
-        px: '/',
+        px: process.env.PREFIX,
         token: process.env.BOT_TOKEN,
         playing: 'by PPUKJ ❤️'
     },
