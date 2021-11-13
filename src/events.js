@@ -4,8 +4,6 @@ player.on('error', (queue, error) => {
     log.info(`Error from [${queue.connection.channel.guild.name}/${queue.connection.channel.name}|${queue.connection.channel.guild.id}]`);
     log.error(`Printing Error object`)
     console.log(error);
-    log.error(`Printing Current Tag`)
-    console.log(queue.current);
     
     queue.metadata.send(`Error happened when try to play song ${queue.current.title}, skipping... ❌`);
     if(queue){
