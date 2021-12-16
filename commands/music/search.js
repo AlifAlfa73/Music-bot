@@ -3,8 +3,9 @@ const { QueryType } = require('discord-player');
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
-    name: 'search',
-    description: 'search a track',
+    name: 'playsearch',
+    aliases: ['psh'],
+    utilisation: '{prefix}search [song name]',
     voiceChannel: true,
     options: [
         {
