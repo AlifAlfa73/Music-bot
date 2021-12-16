@@ -2,8 +2,8 @@ const { MessageEmbed } = require('discord.js');
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
-    name: 'search',
-    aliases: ['sh'],
+    name: 'playsearch',
+    aliases: ['psh'],
     utilisation: '{prefix}search [song name]',
     voiceChannel: true,
 
