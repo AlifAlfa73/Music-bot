@@ -44,7 +44,7 @@ module.exports = {
 
             await musicUtils.voiceConnect(message, queue);
 
-            await message.channel.send(`Loading your search... 🎧`);
+            message.channel.send(`Loading your search... 🎧`);
 
             queue.addTrack(res.tracks[query.content - 1]);
 

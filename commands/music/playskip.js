@@ -18,7 +18,7 @@ module.exports = {
         if(!res.playlist){
             const queue = await musicUtils.createQueue(player,message);
 
-            await message.channel.send(`Inserting track ${res.tracks[0].title} to be played next... 🎧`);4
+            message.channel.send(`Inserting track ${res.tracks[0].title} to be played next... 🎧`);4
             await queue.insert(res.tracks[0],0);
             if (!queue || !queue.playing){
                 await musicUtils.voiceConnect(message,queue);
