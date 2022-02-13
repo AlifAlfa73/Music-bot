@@ -16,7 +16,7 @@ module.exports = {
         const queue = await musicUtils.createQueue(player,message);
         await musicUtils.voiceConnect(message, queue);
 
-        await message.channel.send(`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`);
+        message.channel.send(`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`);
 
         res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]);
 
