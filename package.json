@@ -8,8 +8,8 @@
   "scripts": {
     "main": "node main.js",
     "dev": "NODE_ENV=dev node main.js",
-    "lint" : "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "start" : "npm run lint && npm run main"
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "start": "npm run lint && npm run main"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
@@ -18,7 +18,8 @@
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0",
     "ms": "^3.0.0-canary.1",
-    "opusscript": "^0.0.8"
+    "opusscript": "^0.0.8",
+    "ytdl-core": "^4.10.1"
   },
   "devDependencies": {
     "eslint": "^8.2.0"
