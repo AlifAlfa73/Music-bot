@@ -39,7 +39,7 @@ jobs:
           
           script: | #Script to run after SSH-ing
             cd bots/Music-bot/
-            git fetch -all
+            git fetch --all
             git checkout master
             git pull origin master
             npm install
