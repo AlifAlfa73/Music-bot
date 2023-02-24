@@ -6,7 +6,8 @@ module.exports = {
     app: {
         px: process.env.PREFIX,
         token: process.env.BOT_TOKEN,
-        playing: 'by PPUKJ ❤️'
+        playing: 'by PPUKJ ❤️',
+        global: true,
     },
 
     opt: {

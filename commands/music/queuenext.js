@@ -31,3 +31,14 @@
 //         }
 //     },
 // };
+
+// placeholder
+module.exports = {
+    name: 'queuenext',
+    description: 'Insert track to be played next',
+    voiceChannel: true,
+
+    execute({ inter }) {
+        inter.reply({ content: `placeholder` });
+    },
+};
