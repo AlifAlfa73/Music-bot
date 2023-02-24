@@ -46,7 +46,10 @@ module.exports.createQueue = async function(player, message){
             highWaterMark: 1 << 25,
             dlChunkSize: 0,
         },
-        metadata: message.channel
+        metadata: message.channel,
+        leaveOnEnd: true,
+        leaveOnEndCooldown: 5000,
+        leaveOnEmpty: true,
     });
 
     return queue;
