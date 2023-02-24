@@ -1,6 +1,5 @@
-const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js');
+const { ApplicationCommandOptionType } = require('discord.js');
 const { QueryType } = require('discord-player');
-const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'playsearch',
@@ -16,7 +15,7 @@ module.exports = {
         }
     ],
 
-    async execute({ client, inter }) {
+    async execute({ inter }) {
         const song = inter.options.getString('song');
 
         const res = await player.search(song, {

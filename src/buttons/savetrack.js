@@ -21,6 +21,7 @@ module.exports = async ({ inter, queue }) => {
     }).then(() => {
         return inter.reply({ content: `I have sent you the title of the music by private messages ✅`, ephemeral: true });
     }).catch(error => {
+        console.log(error)
         return inter.reply({ content: `Unable to send you a private message... try again ? ❌`, ephemeral: true });
     });
 

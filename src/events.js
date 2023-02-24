@@ -1,4 +1,4 @@
-const { ApplicationCommandOptionType, ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js');
+const {ActionRowBuilder, ButtonBuilder, EmbedBuilder } = require('discord.js');
 const log = require('../utils/logUtils');
 
 player.on('error', (queue, error) => {
@@ -77,6 +77,6 @@ player.on('queueEnd', (queue) => {
     queue.metadata.send('I finished reading the whole queue ✅');
 });
 
-player.on('tracksAdd', (queue, tracks) => {
+player.on('tracksAdd', (queue) => {
     queue.metadata.send(`All the songs in playlist added into the queue ✅`);
 });

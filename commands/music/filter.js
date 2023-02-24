@@ -15,7 +15,7 @@ module.exports = {
     ],
 
 
-    async execute({ inter, client }) {
+    async execute({ inter }) {
         const queue = player.getQueue(inter.guildId);
 
         if (!queue || !queue.playing) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });

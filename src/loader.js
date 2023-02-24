@@ -2,9 +2,7 @@ const { readdirSync } = require('fs');
 const { Collection } = require('discord.js');
 
 client.commands = new Collection();
-CommandsArray = [];
-
-
+var CommandsArray = [];
 
 const events = readdirSync('./events/').filter(file => file.endsWith('.js'));
 
@@ -30,7 +28,7 @@ readdirSync('./commands/').forEach(dirs => {
         client.commands.set(command.name.toLowerCase(), command);
         delete require.cache[require.resolve(`../commands/${dirs}/${file}`)];
         } else console.log(`[failed Command]  ${command.name.toLowerCase()}`)
-    };
+    }
 });
 
 client.on('ready', (client) => {

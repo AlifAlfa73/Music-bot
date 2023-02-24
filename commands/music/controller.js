@@ -13,7 +13,7 @@ module.exports = {
             required: true,
         }
     ],
-    async execute({ inter, client }) { 
+    async execute({ inter }) { 
       let Channel = inter.options.getChannel('channel');
       if (Channel.type !== 0) return inter.reply({ content: `you have to send it to a text channel.. ❌`, ephemeral: true})
 
