@@ -121,9 +121,9 @@ module.exports.skipLoopSong = async function (queue){
 
 module.exports.voiceConnect = async function(message, queue){
     try {
-        if (!queue.connection) await queue.connect(message.member.voice.channel);
+        if (!queue.connection) await queue.connect(inter.member.voice.channel);
     } catch {
-        await player.deleteQueue(message.guild.id);
-        return message.channel.send(`I can't join the voice channel ${message.author}... try again ? ❌`);
+        await player.deleteQueue(inter.guildId);
+        return inter.editReply({ content: `I can't join the voice channel ${inter.member}... try again ? ❌`, ephemeral: true});
     }
 }
