@@ -1,43 +1,50 @@
+const { QueueRepeatMode, QueryType } = require('discord-player');
+const { ApplicationCommandOptionType } = require('discord.js');
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'playskip',
-    aliases: ['ps'],
-    utilisation: '{prefix}playskip [song name/URL]',
+    description: "skip the current song and play a new song",
     voiceChannel: true,
-
-    async execute(client, message, args) {
-        if (!args[0]) return message.channel.send(`Please enter a valid search ${message.author}... try again ? ❌`);
-
-        const res = await musicUtils.search(message,args.join(' '));
-
-        if(!res){
-            return message.channel.send(`No results found ${message.author}... try again ? ❌`);
+    options: [
+        {
+            name: 'song',
+            description: 'the song you want to play',
+            type: ApplicationCommandOptionType.String,
+            required: true,
         }
-        
-        if(!res.playlist){
-            const queue = await musicUtils.createQueue(player,message);
+    ],
 
-            message.channel.send(`Inserting track ${res.tracks[0].title} to be played next... 🎧`);4
-            await queue.insert(res.tracks[0],0);
+    async execute({ inter }) {
+	await inter.deferReply();
+        const song = inter.options.getString('song');
+        const res = await player.search(song, {
+            requestedBy: inter.member,
+            searchEngine: QueryType.AUTO
+        });
+
+        if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
+
+        if(!res.playlist){
+            const queue = await musicUtils.createQueue(player, inter);
+            await inter.editReply({ content:`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`});
+            await queue.addTrack(res.tracks[0]);
             if (!queue || !queue.playing){
-                await musicUtils.voiceConnect(message,queue);
-                await queue.play();
+                await musicUtils.voiceConnect(queue, inter);
+                if (!queue.playing) await queue.play();
             }else{
                 var loopSong = false;
-                if(queue.repeatMode === 1){
-                    loopSong = true;
-                    player.once('trackStart',(queue) =>{
-                        if(loopSong) musicUtils.setLoop(queue,'song');
-                    })
-                }
-                if(loopSong) musicUtils.setLoop(queue,'off');
-                const success = queue.skip();
-                
-                return message.channel.send(success ? `Current music ${queue.current.title} skipped ✅` : `Something went wrong ${message.author}... try again ? ❌`);
+                    if(queue.repeatMode === 1){
+                        loopSong = true;
+                        player.once('trackStart',(queue) =>{
+                            if(loopSong) musicUtils.setLoop(queue,'song');
+                        })
+                    }
+                    if(loopSong) musicUtils.setLoop(queue,'off');
+                    const success = queue.skip();
             }
         }else{
-            message.channel.send(`Do not insert playlist to queue next! Queue next only accept singular track`);
+            await inter.editReply({ content:`Do not insert playlist to queue next! Queue next only accept singular track`});
         }
     },
 };

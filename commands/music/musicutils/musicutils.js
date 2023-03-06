@@ -38,18 +38,12 @@ module.exports.jump = async function(queue, idx){
     return true;
 }
 
-module.exports.createQueue = async function(player, message){
-    const queue = await player.createQueue(message.guild, {
-        ytdlOptions: {
-            quality: "highest",
-            filter: "audioonly",
-            highWaterMark: 1 << 25,
-            dlChunkSize: 0,
-        },
-        metadata: message.channel,
-        leaveOnEnd: true,
-        leaveOnEndCooldown: 5000,
-        leaveOnEmpty: true,
+module.exports.createQueue = async function(player, inter){
+    const queue = await player.createQueue(inter.guild, {
+        metadata: inter.channel,
+        spotifyBridge: client.config.opt.spotifyBridge,
+        initialVolume: client.config.opt.defaultvolume,
+        leaveOnEnd: client.config.opt.leaveOnEnd
     });
 
     return queue;
@@ -119,7 +113,7 @@ module.exports.skipLoopSong = async function (queue){
     return success;
 }
 
-module.exports.voiceConnect = async function(message, queue){
+module.exports.voiceConnect = async function(queue, inter){
     try {
         if (!queue.connection) await queue.connect(inter.member.voice.channel);
     } catch {
