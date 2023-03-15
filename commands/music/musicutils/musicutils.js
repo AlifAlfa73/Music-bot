@@ -2,16 +2,31 @@
 const { QueryType } = require('discord-player');
 const { QueueRepeatMode} = require('discord-player');
 
-module.exports.search = async function(message,param){ 
-        const res = await player.search(param, {
-            requestedBy: message.member,
-            searchEngine: QueryType.AUTO
+module.exports.search = async function(inter){
+        const song = inter.options.getString('song'); 
+        const res = await player.search(song, {
+            requestedBy: inter.member,
+            searchEngine: QueryType.YOUTUBE
         });
 
         if (!res || !res.tracks.length){
             return null;
         }
         return res;
+}
+
+module.exports.search = async function(inter, querytype){
+    const song = inter.options.getString('song');
+    const res = await player.search(song, {
+        requestedBy: inter.member,
+        searchEngine: querytype
+    });
+    
+
+    if (!res || !res.tracks.length){
+        return null;
+    }
+    return res;
 }
 
 //custom shuffle since discord-player shuffle doesn't shuffle current track

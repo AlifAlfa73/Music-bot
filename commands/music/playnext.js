@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType } = require('discord.js');
 const { QueryType } = require('discord-player');
+const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'playnext',
@@ -20,12 +21,7 @@ module.exports = {
 
         if (!queue || !queue.isPlaying()) return inter.editReply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        const song = inter.options.getString('song');
-
-        const res = await player.search(song, {
-            requestedBy: inter.member,
-            searchEngine: QueryType.AUTO
-        });
+        const res = await musicUtils.search(inter, QueryType.YOUTUBE);
 
         if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 

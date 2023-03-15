@@ -1,5 +1,7 @@
 const { QueryType } = require('discord-player');
 const { ApplicationCommandOptionType } = require('discord.js');
+const musicUtils = require('./musicutils/musicutils');
+
 module.exports = {
     name: 'play',
     description: "play a song!",
@@ -15,11 +17,7 @@ module.exports = {
 
     async execute({ inter, client }) {
 	    await inter.deferReply();
-        const song = inter.options.getString('song');
-        const res = await player.search(song, {
-            requestedBy: inter.member,
-            searchEngine: QueryType.AUTO
-        });
+        const res = await musicUtils.search(inter, QueryType.YOUTUBE);
 
         if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 

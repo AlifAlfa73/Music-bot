@@ -16,12 +16,8 @@ module.exports = {
     ],
 
     async execute({ inter }) {
-	await inter.deferReply();
-        const song = inter.options.getString('song');
-        const res = await player.search(song, {
-            requestedBy: inter.member,
-            searchEngine: QueryType.AUTO
-        });
+	    await inter.deferReply();
+        const res = await musicUtils.search(inter, QueryType.YOUTUBE);
 
         if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 
@@ -31,7 +27,7 @@ module.exports = {
             await queue.addTrack(res.tracks[0]);
             if (!queue || !queue.playing){
                 await musicUtils.voiceConnect(queue, inter);
-                if (!queue.playing) await queue.play();
+                if (!queue.playing) await queue.node.play();
             }else{
                 var loopSong = false;
                     if(queue.repeatMode === 1){
