@@ -25,7 +25,7 @@ module.exports = {
 
         if (!res || !res.tracks.length) return inter.reply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        const queue = await player.createQueue(inter.guild, {
+        const queue = await player.nodes.delete(inter.guild, {
             metadata: inter.channel,
             leaveOnEnd: client.config.opt.leaveOnEnd,
         });
@@ -58,7 +58,7 @@ module.exports = {
             try {
                 if (!queue.connection) await queue.connect(inter.member.voice.channel);
             } catch {
-                await player.deleteQueue(inter.guildId);
+                await player.nodes.delete(inter.guildId);
                 return inter.followUp({ content: `I can't join the voice channel ${inter.member}... try again ? ❌`, ephemeral: true });
             }
 

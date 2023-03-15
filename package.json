@@ -14,7 +14,7 @@
   "dependencies": {
     "@discordjs/voice": "^0.15.0",
     "bluebird": "^3.7.2",
-    "discord-player": "^5.3.1",
+    "discord-player": "^6.1.1",
     "discord.js": "^14.1.2",
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^5.0.2",
