@@ -24,7 +24,7 @@ module.exports = {
         if(!res.playlist){
             const queue = await musicUtils.createQueue(player, inter);
             await inter.editReply({ content:`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`});
-            await queue.addTrack(res.tracks[0]);
+            queue.insertTrack(res.tracks[0], 0)
             if (!queue || !queue.playing){
                 await musicUtils.voiceConnect(queue, inter);
                 if (!queue.playing) await queue.node.play();
