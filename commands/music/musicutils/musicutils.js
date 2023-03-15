@@ -6,6 +6,11 @@ module.exports.search = async function(inter){
         const song = inter.options.getString('song'); 
         const source = inter.options.getInteger('source'); 
         var querytype = QueryType.YOUTUBE;
+        var isUrl = isValidHttpUrl(song);
+        //if input is url then default become auto
+        if(isUrl){
+            querytype = QueryType.Auto;
+        }
         try{
             if(source){
                 switch(source){
@@ -34,12 +39,12 @@ module.exports.search = async function(inter){
                     //    querytype = QueryType.APPLE_MUSIC_SONG
                     //    break;
                     default:
-                        querytype = QueryType.YOUTUBE;
+                        querytype = isUrl ? querytype.Auto : querytype.YOUTUBE;
                 }
             }
             var res = await this.searchQuery(inter, song, querytype);
         }catch(err){
-            console.log(err);
+            console.error(err);
         }
 
         return res
@@ -53,9 +58,19 @@ module.exports.searchQuery = async function(inter, song, querytype){
             searchEngine: querytype
         });
     }catch(err){
-        console.log(err);
+        console.error(err);
     }
     return res;
+}
+
+function isValidHttpUrl(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
 }
 
 //custom shuffle since discord-player shuffle doesn't shuffle current track
