@@ -7,12 +7,12 @@ module.exports.search = async function(inter){
         const source = inter.options.getInteger('source'); 
         var querytype = QueryType.YOUTUBE;
         var isUrl = isValidHttpUrl(song);
-        //if input is url then default become auto
-        if(isUrl){
-            querytype = QueryType.Auto;
-        }
         try{
-            if(source){
+            //if input is url then ignore source options
+            //prioritize source based on url
+            if(isUrl){
+                querytype = QueryType.Auto;
+            }else{ //else query based on source options. Default Youtube
                 switch(source){
                     case 0:
                         queryType = QueryType.AUTO;
@@ -39,7 +39,7 @@ module.exports.search = async function(inter){
                     //    querytype = QueryType.APPLE_MUSIC_SONG
                     //    break;
                     default:
-                        querytype = isUrl ? querytype.Auto : querytype.YOUTUBE;
+                        querytype = querytype.YOUTUBE;
                 }
             }
             var res = await this.searchQuery(inter, song, querytype);
