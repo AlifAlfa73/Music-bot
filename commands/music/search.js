@@ -18,7 +18,6 @@ module.exports = {
             description: 'song source',
             type: ApplicationCommandOptionType.Integer,
             choices: [
-                {name: 'Auto',  value: 0},
                 {name: 'Youtube', value: 1},
                 {name: 'Spotify', value: 2},
                 {name: 'Soundcloud', value: 3}

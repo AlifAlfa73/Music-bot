@@ -14,9 +14,6 @@ module.exports.search = async function(inter){
                 querytype = QueryType.Auto;
             }else{ //else query based on source options. Default Youtube
                 switch(source){
-                    case 0:
-                        queryType = QueryType.AUTO;
-                        break;
                     case 1:
                         querytype = QueryType.YOUTUBE;
                         break;
