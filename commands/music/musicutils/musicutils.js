@@ -38,12 +38,18 @@ module.exports.jump = async function(queue, idx){
     return true;
 }
 
+
 module.exports.createQueue = async function(player, inter){
-    const queue = await player.createQueue(inter.guild, {
-        metadata: inter.channel,
-        spotifyBridge: client.config.opt.spotifyBridge,
-        initialVolume: client.config.opt.defaultvolume,
-        leaveOnEnd: client.config.opt.leaveOnEnd
+    const queue = player.nodes.create(inter.guild, {
+        metadata: {
+            channel: inter.channel,
+            client: inter.guild.members.me,
+            requestedBy: inter.user,
+        },
+        selfDeaf: true,
+        volume: client.config.opt.defaultvolume,
+        leaveOnEmpty: client.config.opt.leaveOnEmpty,
+        leaveOnEnd: client.config.opt.leaveOnEnd,
     });
 
     return queue;
@@ -117,7 +123,7 @@ module.exports.voiceConnect = async function(queue, inter){
     try {
         if (!queue.connection) await queue.connect(inter.member.voice.channel);
     } catch {
-        await player.deleteQueue(inter.guildId);
+        await player.nodes.delete(inter.guildId);
         return inter.editReply({ content: `I can't join the voice channel ${inter.member}... try again ? ❌`, ephemeral: true});
     }
 }
