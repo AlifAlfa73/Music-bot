@@ -13,30 +13,32 @@ module.exports.search = async function(inter){
             if(isUrl){
                 querytype = QueryType.Auto;
             }else{ //else query based on source options. Default Youtube
-                switch(source){
-                    case 1:
-                        querytype = QueryType.YOUTUBE;
-                        break;
-                    case 2:
-                        querytype = QueryType.SPOTIFY_SEARCH;
-                        break;
-                    case 3:
-                        querytype = QueryType.SOUNDCLOUD_SEARCH;
-                        break;
-                    //case 4:
-                    //    querytype = QueryType.FACEBOOK;
-                    //    break;
-                    //case 5:
-                    //    querytype = QueryType.VIMEO;
-                    //    break;
-                    //case 6:
-                    //    querytype = QueryType.ARBITRARY;
-                    //    break;
-                    //case 7:
-                    //    querytype = QueryType.APPLE_MUSIC_SONG
-                    //    break;
-                    default:
-                        querytype = querytype.YOUTUBE;
+                if(source){
+                    switch(source){
+                        case 1:
+                            querytype = QueryType.YOUTUBE;
+                            break;
+                        case 2:
+                            querytype = QueryType.SPOTIFY_SEARCH;
+                            break;
+                        case 3:
+                            querytype = QueryType.SOUNDCLOUD_SEARCH;
+                            break;
+                        //case 4:
+                        //    querytype = QueryType.FACEBOOK;
+                        //    break;
+                        //case 5:
+                        //    querytype = QueryType.VIMEO;
+                        //    break;
+                        //case 6:
+                        //    querytype = QueryType.ARBITRARY;
+                        //    break;
+                        //case 7:
+                        //    querytype = QueryType.APPLE_MUSIC_SONG
+                        //    break;
+                        default:
+                            querytype = querytype.YOUTUBE;
+                    }
                 }
             }
             var res = await this.searchQuery(inter, song, querytype);
