@@ -4,27 +4,56 @@ const { QueueRepeatMode} = require('discord-player');
 
 module.exports.search = async function(inter){
         const song = inter.options.getString('song'); 
-        const res = await player.search(song, {
-            requestedBy: inter.member,
-            searchEngine: QueryType.YOUTUBE
-        });
-
-        if (!res || !res.tracks.length){
-            return null;
+        const source = inter.options.getInteger('source'); 
+        var querytype = QueryType.YOUTUBE;
+        try{
+            if(source){
+                switch(source){
+                    case 0:
+                        queryType = QueryType.AUTO;
+                        break;
+                    case 1:
+                        querytype = QueryType.YOUTUBE;
+                        break;
+                    case 2:
+                        querytype = QueryType.SPOTIFY_SEARCH;
+                        break;
+                    case 3:
+                        querytype = QueryType.SOUNDCLOUD_SEARCH;
+                        break;
+                    //case 4:
+                    //    querytype = QueryType.FACEBOOK;
+                    //    break;
+                    //case 5:
+                    //    querytype = QueryType.VIMEO;
+                    //    break;
+                    //case 6:
+                    //    querytype = QueryType.ARBITRARY;
+                    //    break;
+                    //case 7:
+                    //    querytype = QueryType.APPLE_MUSIC_SONG
+                    //    break;
+                    default:
+                        querytype = QueryType.YOUTUBE;
+                }
+            }
+            var res = await this.searchQuery(inter, song, querytype);
+        }catch(err){
+            console.log(err);
         }
-        return res;
+
+        return res
 }
 
-module.exports.search = async function(inter, querytype){
-    const song = inter.options.getString('song');
-    const res = await player.search(song, {
-        requestedBy: inter.member,
-        searchEngine: querytype
-    });
-    
-
-    if (!res || !res.tracks.length){
-        return null;
+module.exports.searchQuery = async function(inter, song, querytype){
+    var res = null;
+    try{
+        res = await player.search(song, {
+            requestedBy: inter.member,
+            searchEngine: querytype
+        });
+    }catch(err){
+        console.log(err);
     }
     return res;
 }

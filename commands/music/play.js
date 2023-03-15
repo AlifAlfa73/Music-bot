@@ -12,12 +12,24 @@ module.exports = {
             description: 'the song you want to play',
             type: ApplicationCommandOptionType.String,
             required: true,
+        },
+        {
+            name: 'source',
+            description: 'song source',
+            type: ApplicationCommandOptionType.Integer,
+            choices: [
+                {name: 'Auto',  value: 0},
+                {name: 'Youtube', value: 1},
+                {name: 'Spotify', value: 2},
+                {name: 'Soundcloud', value: 3}
+            ],
+            required: false,
         }
     ],
 
     async execute({ inter, client }) {
 	    await inter.deferReply();
-        const res = await musicUtils.search(inter, QueryType.YOUTUBE);
+        const res = await musicUtils.search(inter);
 
         if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 
