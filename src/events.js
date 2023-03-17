@@ -60,6 +60,6 @@ player.events.on('emptyQueue', (queue) => {
     queue.metadata.channel.send('I finished reading the whole queue ✅');
 });
 
-player.events.on('audioTracksAdd', (queue, tracks) => {
+player.events.on('audioTracksAdd', (queue) => {
     queue.metadata.channel.send(`All the songs in playlist added into the queue ✅`);
 });

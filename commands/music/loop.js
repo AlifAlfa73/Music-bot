@@ -33,7 +33,6 @@ module.exports = {
                 }
 
                 return inter.reply({ content: `Repeat mode **enabled** the whole queue will be repeated endlessly 🔁` });
-                break
             }
             case 'disable_loop': {
                 if (queue.repeatMode === QueueRepeatMode.OFF) return inter.reply({ content: `The loop is currently disabled ${inter.member}... try again ? ❌`, ephemeral: true })
@@ -45,7 +44,6 @@ module.exports = {
                 }
 
                 return inter.reply({ content: `Repeat mode **disabled**` });
-                break
             }
             case 'enable_loop_song': {
                 if (queue.repeatMode === QueueRepeatMode.QUEUE) return inter.reply({ content:`You must first disable the current music in the loop mode (/loop Disable) ${inter.member}... try again ? ❌`, ephemeral: true });
@@ -57,7 +55,6 @@ module.exports = {
                 }
 
                 return inter.reply({ content: `Repeat mode **enabled** the current song will be repeated endlessly (you can end the loop with /loop disable)` });
-                break
             }
         }
        

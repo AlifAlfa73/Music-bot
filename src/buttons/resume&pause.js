@@ -1,7 +1,6 @@
 module.exports = async ({  inter, queue }) => { 
     if (!queue || !queue.isPlaying()) return inter.reply({ content: `No music currently playing... try again ? ❌`, ephemeral: true });
 
-    let success = null;
 
     if (queue.node.isPaused()) {
         queue.node.resume()

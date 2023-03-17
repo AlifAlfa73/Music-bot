@@ -1,5 +1,4 @@
 const { ApplicationCommandOptionType } = require('discord.js');
-const { QueryType } = require('discord-player');
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {

@@ -1,4 +1,3 @@
-const { QueryType } = require('discord-player');
 const { ApplicationCommandOptionType } = require('discord.js');
 const musicUtils = require('./musicutils/musicutils');
 
@@ -27,7 +26,7 @@ module.exports = {
     ],
 
     async execute({ inter }) {
-	    await inter.deferReply();
+        await inter.deferReply();
         //const song = inter.options.getString('song');
         
         const res = await musicUtils.search(inter);

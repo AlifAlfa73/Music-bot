@@ -1,5 +1,5 @@
 const ms = require('ms');
-const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js');
+const { ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
     name: 'seek',

@@ -7,6 +7,9 @@ globals:
   player: readonly
   process: readonly
   __dirname: readonly
+  token: readonly
+  clientId: readonly
+  guildId: readonly
 extends: eslint:recommended
 parserOptions:
   ecmaVersion: 13

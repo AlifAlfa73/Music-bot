@@ -1,4 +1,4 @@
-const { QueueRepeatMode, QueryType } = require('discord-player');
+//const { QueueRepeatMode, QueryType } = require('discord-player');
 const { ApplicationCommandOptionType } = require('discord.js');
 const musicUtils = require('./musicutils/musicutils');
 
@@ -27,7 +27,7 @@ module.exports = {
     ],
 
     async execute({ inter }) {
-	    await inter.deferReply();
+        await inter.deferReply();
         const res = await musicUtils.search(inter);
 
         if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
@@ -48,7 +48,7 @@ module.exports = {
                         })
                     }
                     if(loopSong) musicUtils.setLoop(queue,'off');
-                    const success = queue.skip();
+                    queue.skip();
             }
         }else{
             await inter.editReply({ content:`Do not insert playlist to queue next! Queue next only accept singular track`});
