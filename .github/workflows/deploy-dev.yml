@@ -44,6 +44,7 @@ jobs:
           script: | #Script to run after SSH-ing
             cd bots/Music-bot/
             git fetch --all
+            git stash
             git checkout ${{ steps.extract_branch.outputs.branch }}
             git pull origin ${{ steps.extract_branch.outputs.branch }}
             npm install
