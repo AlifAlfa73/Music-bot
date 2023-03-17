@@ -1,18 +1,10 @@
 const { EmbedBuilder } = require('discord.js');
+module.exports = async ({ client, inter, queue }) => { 
+    if (!queue || !queue.isPlaying()) return inter.reply({ content: `No music currently playing... try again ? ❌`, ephemeral: true });
 
-module.exports = {
-    name: 'queue',
-    description: 'Get the songs in the queue',
-    voiceChannel: true,
+    const alltracks = queue.tracks.toArray()
 
-    execute({ client, inter }) {
-        const queue = player.nodes.get(inter.guildId);
-
-        if (!queue) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
-
-        const alltracks = queue.tracks.toArray()
-
-        if (!alltracks[0]) return inter.reply({ content: `No music in the queue after the current one ${inter.member}... try again ? ❌`, ephemeral: true });
+    if (!alltracks[0]) return inter.reply({ content: `No music in the queue after the current one ${inter.member}... try again ? ❌`, ephemeral: true });
 
         const methods = ['', '🔁', '🔂'];
 
@@ -30,6 +22,5 @@ module.exports = {
         .setTimestamp()
         .setFooter({ text: 'Music comes first - Made with heart by Zerio ❤️', iconURL: inter.member.avatarURL({ dynamic: true })})
 
-        inter.reply({ embeds: [embed] });
-    },
-};
+        inter.reply({ embeds: [embed], ephemeral: true });
+}

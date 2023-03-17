@@ -1,36 +1,62 @@
 const { QueueRepeatMode } = require('discord-player');
-const musicUtils = require('./musicutils/musicutils')
+const { ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
     name: 'loop',
-    aliases: ['lp', 'repeat'],
-    utilisation: '{prefix}loop <queue>',
+    description: 'Enable or disable looping of song\'s or the whole queue',
     voiceChannel: true,
+    options: [
+        {
+        name: 'action' ,
+        description: 'what action you want to preform on the loop',
+        type: ApplicationCommandOptionType.String,
+        required: true,
+        choices: [
+            { name: 'Queue', value: 'enable_loop_queue' },
+            { name: 'Disable', value: 'disable_loop'},
+            { name: 'Song', value: 'enable_loop_song' },
+        ],
+    }
+    ],
+    execute({ inter }) {
+        const queue = player.nodes.get(inter.guildId);
 
-    execute(client, message, args) {
-        const queue = player.getQueue(message.guild.id);
+        if (!queue || !queue.isPlaying()) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
+        switch (inter.options._hoistedOptions.map(x => x.value).toString()) {
+            case 'enable_loop_queue': {
+                if (queue.repeatMode === QueueRepeatMode.TRACK) return inter.reply({ content:`You must first disable the current music in the loop mode (/loop Disable) ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        var prefix = client.config.app.px
+                try {
+                    queue.setRepeatMode(QueueRepeatMode.QUEUE);
+                } catch {
+                    return inter.reply({ content: `Something went wrong ${inter.member}... try again ? ❌` });
+                }
 
-        if (!queue || !queue.playing) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
+                return inter.reply({ content: `Repeat mode **enabled** the whole queue will be repeated endlessly 🔁` });
+            }
+            case 'disable_loop': {
+                if (queue.repeatMode === QueueRepeatMode.OFF) return inter.reply({ content: `The loop is currently disabled ${inter.member}... try again ? ❌`, ephemeral: true })
+                
+                try {
+                    queue.setRepeatMode(QueueRepeatMode.OFF);
+                } catch {
+                    return inter.reply({ content: `Something went wrong ${inter.member}... try again ? ❌` });
+                }
 
-        var opt = args.join('').toLowerCase();
-        var success = false;
-        switch(opt){
-            case 'queue':
-                success = musicUtils.setLoopQueue(queue,opt);
-                return message.channel.send(success ? `Repeat queue enabled. The whole queue will be repeated endlessly 🔁` : `Something went wrong ${message.author}... try again ? ❌`);
-            case 'song':
-                success = musicUtils.setLoopTrack(queue,opt);
-                return message.channel.send(success ? `Repeat song enabled. The current music will be repeated endlessly 🔂` : `Something went wrong ${message.author}... try again ? ❌`);
-            case 'off':
-                success = queue.setRepeatMode(QueueRepeatMode.OFF);
-                return message.channel.send(success ? `Repeat mode disabled` : `Something went wrong ${message.author}... try again ? ❌`);
-            default :
-                return message.channel.send(
-                    `Please use \`${prefix}loop song\` to loop the song that is currently playing,` + 
-                    ` \`${prefix}loop queue\` to loop the entire queue,` +
-                    ` or \`${prefix}loop off\` to stop current loop.`);
+                return inter.reply({ content: `Repeat mode **disabled**` });
+            }
+            case 'enable_loop_song': {
+                if (queue.repeatMode === QueueRepeatMode.QUEUE) return inter.reply({ content:`You must first disable the current music in the loop mode (/loop Disable) ${inter.member}... try again ? ❌`, ephemeral: true });
+
+                try {
+                    queue.setRepeatMode(QueueRepeatMode.TRACK);
+                } catch {
+                    return inter.reply({ content: `Something went wrong ${inter.member}... try again ? ❌`, ephemeral: true });
+                }
+
+                return inter.reply({ content: `Repeat mode **enabled** the current song will be repeated endlessly (you can end the loop with /loop disable)` });
+            }
         }
+       
     },
 };

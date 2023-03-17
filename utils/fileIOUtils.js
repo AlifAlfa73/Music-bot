@@ -44,11 +44,6 @@ module.exports.deleteFile = function(filePath, cb){
   });
 }
 
-//delete file
-module.exports.deleteJsonFile = function(filePath, cb){
-  this.deleteFile(filePath+".json",cb);
-}
-
 module.exports.listDir = function(dirPath, cb){
   var relativePath = path.join(projectRoot + dirPath)
 
@@ -56,7 +51,7 @@ module.exports.listDir = function(dirPath, cb){
     return cb("Not Exist");
   }
 
-  var files = fs.readdirSync(relativePath, function(err){
+  var files = fs.readdirSync(dirPath, function(err){
     return cb("[File IO Error]" + err);
   });
 

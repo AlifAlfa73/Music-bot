@@ -2,16 +2,74 @@
 const { QueryType } = require('discord-player');
 const { QueueRepeatMode} = require('discord-player');
 
-module.exports.search = async function(message,param){ 
-        const res = await player.search(param, {
-            requestedBy: message.member,
-            searchEngine: QueryType.AUTO
-        });
-
-        if (!res || !res.tracks.length){
-            return null;
+module.exports.search = async function(inter){
+        const song = inter.options.getString('song'); 
+        const source = inter.options.getInteger('source'); 
+        var querytype = QueryType.YOUTUBE;
+        var isUrl = isValidHttpUrl(song);
+        try{
+            //if input is url then ignore source options
+            //prioritize source based on url
+            if(isUrl){
+                querytype = QueryType.Auto;
+            }else{ //else query based on source options. Default Youtube
+                if(source){
+                    switch(source){
+                        case 1:
+                            querytype = QueryType.YOUTUBE;
+                            break;
+                        case 2:
+                            querytype = QueryType.SPOTIFY_SEARCH;
+                            break;
+                        case 3:
+                            querytype = QueryType.SOUNDCLOUD_SEARCH;
+                            break;
+                        //case 4:
+                        //    querytype = QueryType.FACEBOOK;
+                        //    break;
+                        //case 5:
+                        //    querytype = QueryType.VIMEO;
+                        //    break;
+                        //case 6:
+                        //    querytype = QueryType.ARBITRARY;
+                        //    break;
+                        //case 7:
+                        //    querytype = QueryType.APPLE_MUSIC_SONG
+                        //    break;
+                        default:
+                            querytype = querytype.YOUTUBE;
+                    }
+                }
+            }
+            var res = await this.searchQuery(inter, song, querytype);
+        }catch(err){
+            console.error(err);
         }
-        return res;
+
+        return res
+}
+
+module.exports.searchQuery = async function(inter, song, querytype){
+    var res = null;
+    try{
+        res = await player.search(song, {
+            requestedBy: inter.member,
+            searchEngine: querytype
+        });
+    }catch(err){
+        console.error(err);
+    }
+    return res;
+}
+
+function isValidHttpUrl(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
 }
 
 //custom shuffle since discord-player shuffle doesn't shuffle current track
@@ -38,15 +96,18 @@ module.exports.jump = async function(queue, idx){
     return true;
 }
 
-module.exports.createQueue = async function(player, message){
-    const queue = await player.createQueue(message.guild, {
-        ytdlOptions: {
-            quality: "highest",
-            filter: "audioonly",
-            highWaterMark: 1 << 25,
-            dlChunkSize: 0,
+
+module.exports.createQueue = async function(player, inter){
+    const queue = player.nodes.create(inter.guild, {
+        metadata: {
+            channel: inter.channel,
+            client: inter.guild.members.me,
+            requestedBy: inter.user,
         },
-        metadata: message.channel
+        selfDeaf: true,
+        volume: client.config.opt.defaultvolume,
+        leaveOnEmpty: client.config.opt.leaveOnEmpty,
+        leaveOnEnd: client.config.opt.leaveOnEnd,
     });
 
     return queue;
@@ -116,11 +177,11 @@ module.exports.skipLoopSong = async function (queue){
     return success;
 }
 
-module.exports.voiceConnect = async function(message, queue){
+module.exports.voiceConnect = async function(queue, inter){
     try {
-        if (!queue.connection) await queue.connect(message.member.voice.channel);
+        if (!queue.connection) await queue.connect(inter.member.voice.channel);
     } catch {
-        await player.deleteQueue(message.guild.id);
-        return message.channel.send(`I can't join the voice channel ${message.author}... try again ? ❌`);
+        await player.nodes.delete(inter.guildId);
+        return inter.editReply({ content: `I can't join the voice channel ${inter.member}... try again ? ❌`, ephemeral: true});
     }
 }

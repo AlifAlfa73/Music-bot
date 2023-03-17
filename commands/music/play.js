@@ -1,25 +1,59 @@
+const { ApplicationCommandOptionType } = require('discord.js');
 const musicUtils = require('./musicutils/musicutils');
 
 module.exports = {
     name: 'play',
-    aliases: ['p'],
-    utilisation: '{prefix}play [song name/URL]',
+    description: "play a song!",
     voiceChannel: true,
-
-    async execute(client, message, args) {
-        if (!args[0]) return message.channel.send(`Please enter a valid search ${message.author}... try again ? ❌`);
-        var searchParam = args.join(' ');
-        const res = await musicUtils.search(message,searchParam);
-        if(!res){
-            return message.channel.send(`No results found ${message.author}... try again ? ❌`);
+    options: [
+        {
+            name: 'song',
+            description: 'the song you want to play',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+        },
+        {
+            name: 'source',
+            description: 'song source',
+            type: ApplicationCommandOptionType.Integer,
+            choices: [
+                {name: 'Youtube', value: 1},
+                {name: 'Spotify', value: 2},
+                {name: 'Soundcloud', value: 3}
+            ],
+            required: false,
         }
-        const queue = await musicUtils.createQueue(player,message);
-        await musicUtils.voiceConnect(message, queue);
+    ],
 
-        message.channel.send(`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`);
+    async execute({ inter, client }) {
+        await inter.deferReply();
+        const res = await musicUtils.search(inter);
 
-        res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]);
+        if (!res || !res.tracks.length) return inter.editReply({ content: `No results found ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        if (!queue.playing) await queue.play();
+        const queue = player.nodes.create(inter.guild, {
+            metadata: {
+                channel: inter.channel,
+                client: inter.guild.members.me,
+                requestedBy: inter.user,
+            },
+            selfDeaf: true,
+            volume: client.config.opt.defaultvolume,
+            leaveOnEmpty: client.config.opt.leaveOnEmpty,
+            leaveOnEnd: client.config.opt.leaveOnEnd,
+        });
+
+        try {
+            if (!queue.connection) await queue.connect(inter.member.voice.channel);
+        } catch {
+            await player.deleteQueue(inter.guildId);
+            return inter.editReply({ content: `I can't join the voice channel ${inter.member}... try again ? ❌`, ephemeral: true});
+        }
+
+       await inter.editReply({ content:`Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧`});
+
+        res.playlist ? queue.addTrack(res.tracks) : queue.addTrack(res.tracks[0]);
+
+        if (!queue.isPlaying()) await queue.node.play();
     },
 };

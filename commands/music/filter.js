@@ -1,33 +1,40 @@
+const { ApplicationCommandOptionType } = require('discord.js');
+
 module.exports = {
     name: 'filter',
-    aliases: [],
-    utilisation: '{prefix}filter [filter name]',
+    description: 'add a filter to your track',
     voiceChannel: true,
+    options: [
+        {
+            name: 'filter',
+            description: 'filter you want to add',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            choices: [...Object.keys(require("discord-player").AudioFilters.filters).map(m => Object({ name: m, value: m })).splice(0, 25)],
+        }
+    ],
 
-    async execute(client, message, args) {
-        const queue = player.getQueue(message.guild.id);
 
-        if (!queue || !queue.playing) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
+    async execute({ inter }) {
+        const queue = player.nodes.get(inter.guildId);
 
-        const actualFilter = queue.getFiltersEnabled()[0];
+        if (!queue || !queue.isPlaying()) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        if (!args[0]) return message.channel.send(`Please specify a valid filter to enable or disable ${message.author}... try again ? ❌\n${actualFilter ? `Filter currently active ${actualFilter} (${client.config.app.px}filter ${actualFilter} to disable it).\n` : ''}`);
+        const actualFilter = queue.filters.ffmpeg.getFiltersEnabled()[0];
+
+        const infilter = inter.options.getString('filter');
 
         const filters = [];
 
-        queue.getFiltersEnabled().map(x => filters.push(x));
-        queue.getFiltersDisabled().map(x => filters.push(x));
+        queue.filters.ffmpeg.getFiltersEnabled().map(x => filters.push(x));
+        queue.filters.ffmpeg.getFiltersDisabled().map(x => filters.push(x));
 
-        const filter = filters.find((x) => x.toLowerCase() === args[0].toLowerCase());
+        const filter = filters.find((x) => x.toLowerCase() === infilter.toLowerCase());
 
-        if (!filter) return message.channel.send(`This filter doesn't exist ${message.author}... try again ? ❌\n${actualFilter ? `Filter currently active ${actualFilter}.\n` : ''}List of available filters ${filters.map(x => `**${x}**`).join(', ')}.`);
+        if (!filter) return inter.reply({ content: `This filter doesn't exist ${inter.member}... try again ? ❌\n${actualFilter ? `Filter currently active : ${actualFilter}.\n` : ''}List of available filters : ${filters.map(x => `**${x}**`).join(', ')}.`, ephemeral: true });
 
-        const filtersUpdated = {};
+        queue.filters.ffmpeg.toggle(filter.toString())
 
-        filtersUpdated[filter] = queue.getFiltersEnabled().includes(filter) ? false : true;
-
-        await queue.setFilters(filtersUpdated);
-
-        message.channel.send(`The filter ${filter} is now **${queue.getFiltersEnabled().includes(filter) ? 'enabled' : 'disabled'}** ✅\n*Reminder the longer the music is, the longer this will take.*`);
+        inter.reply({ content: `The filter ${filter} is now **${queue.filters.ffmpeg.isEnabled(filter) ? 'enabled' : 'disabled'}** ✅\n*Reminder the longer the music is, the longer this will take.*` });
     },
 };

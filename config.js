@@ -6,17 +6,21 @@ module.exports = {
     app: {
         px: process.env.PREFIX,
         token: process.env.BOT_TOKEN,
-        playing: 'by PPUKJ ❤️'
+        playing: 'by PPUKJ ❤️',
+        global: true,
     },
 
     opt: {
         DJ: {
             enabled: false,
-            roleName: 'DJ',
-            commands: ['back', 'clear', 'filter', 'loop', 'pause', 'resume', 'seek', 'shuffle', 'skip', 'stop', 'volume']
+            roleName: '',
+            commands: []
         },
         maxVol: 100,
+        leaveOnEnd: true,
         loopMessage: false,
+        spotifyBridge: true,
+        defaultvolume: 75,
         discordPlayer: {
             ytdlOptions: {
                 quality: 'highestaudio',

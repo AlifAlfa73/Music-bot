@@ -1,41 +1,34 @@
-const playlistUtils = require('./musicutils/playlistutils')
-
-function saveSong(message, queue){
-    message.author.send(`You saved the track ${queue.current.title} | ${queue.current.author} from the server ${message.guild.name} ✅`).then(() => {
-        message.channel.send(`I have sent you the title of the music by private messages ✅`);
-    }).catch(error => {
-        console.error(error)
-        message.channel.send(`Unable to send you a private message ${message.author}... try again ? ❌`);
-    });
-
-    return;
-}
+const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
     name: 'save',
-    aliases: ['sv'],
-    utilisation: '{prefix}save song | {prefix} save playlist <playlistname>',
+    description: 'save the current track!',
     voiceChannel: true,
 
-    async execute(client, message, args) {
-        const queue = player.getQueue(message.guild.id);
+    async execute({ inter }) {
+        const queue = player.nodes.get(inter.guildId);
 
-        if (!queue || !queue.playing) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
-        
-        var opt = args[0].toLowerCase()
-        switch(opt){
-            case 'song':
-                saveSong(message, queue);
-                break;
-            case 'playlist':
-                if(args.length < 2){
-                    message.channel.send('You need to provide playlist name command : /save playlist <playlist name>');
-                }else{
-                    playlistUtils.savePlaylist(message, args.slice(1), queue);
-                }
-                break;
-            default :
-                message.channel.send(`No such option for this command`);
-        }
+        if (!queue) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
+
+        inter.member.send({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor('Red')
+                    .setTitle(`:arrow_forward: ${queue.currentTrack.title}`)
+                    .setURL(queue.currentTrack.url)
+                    .addFields(
+                        { name: ':hourglass: Duration:', value: `\`${queue.currentTrack.duration}\``, inline: true },
+                        { name: 'Song by:', value: `\`${queue.currentTrack.author}\``, inline: true },
+                        { name: 'Views :eyes:', value: `\`${Number(queue.currentTrack.views).toLocaleString()}\``, inline: true },
+                        { name: 'Song URL:', value: `\`${queue.currentTrack.url}\`` }
+                    )
+                    .setThumbnail(queue.currentTrack.thumbnail)
+                    .setFooter({text:`From the server ${inter.member.guild.name}`, iconURL: inter.member.guild.iconURL({ dynamic: false })})
+            ]
+        }).then(() => {
+            return inter.reply({ content: `I have sent you the title of the music by private messages ✅`, ephemeral: true });
+        }).catch(() => {
+            return inter.reply({ content: `Unable to send you a private message... try again ? ❌`, ephemeral: true });
+        });
     },
 };

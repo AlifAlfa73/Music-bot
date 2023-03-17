@@ -1,16 +1,17 @@
 module.exports = {
     name: 'pause',
-    aliases: [],
-    utilisation: '{prefix}pause',
+    description: 'pause the track',
     voiceChannel: true,
 
-    execute(client, message) {
-        const queue = player.getQueue(message.guild.id);
+    execute({ inter }) {
+        const queue = player.nodes.get(inter.guildId);
 
-        if (!queue) return message.channel.send(`No music currently playing ${message.author}... try again ? ❌`);
+        if (!queue) return inter.reply({ content: `No music currently playing ${inter.member}... try again ? ❌`, ephemeral: true });
 
-        const success = queue.setPaused(true);
+        if(queue.node.isPaused()) return inter.reply({content: `The track is currently paused, ${inter.member}... try again ? ❌`, ephemeral: true})
 
-        return message.channel.send(success ? `Current music ${queue.current.title} paused ✅` : `Something went wrong ${message.author}... try again ? ❌`);
+        const success = queue.node.pause(true);
+        
+        return inter.reply({ content: success ? `Current music ${queue.currentTrack.title} paused ✅` : `Something went wrong ${inter.member}... try again ? ❌` });
     },
 };
